@@ -1,0 +1,26 @@
+import java.util.Scanner;
+public class Reversefunction{
+    public static Scanner sc=new Scanner(System.in);
+    public static void main(String[]args){
+        int n,temp;
+        System.out.println("enter n: ");
+        n=sc.nextInt();
+        int rev=pooja(n);
+        
+
+    }
+    public static int pooja(int n){
+        int rem=0;
+        int rev=0;
+        while(n!=0){
+            rem=n%10;
+            rev=rev*10+rem;
+            n=n/10;
+
+        }
+        System.out.println(rev);
+        return 0;
+       
+    }
+    
+}
