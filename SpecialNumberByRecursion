@@ -1,0 +1,42 @@
+import java.util.Scanner;
+
+public class Specialrecur {
+    public static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[]args){
+        int n;
+        System.out.println("enter the n: ");
+        n=sc.nextInt();
+        int factorial(n);
+        int sum=special(n,0,0);
+        int temp=n;
+        if(temp==sum){
+            System.out.println("special number");
+
+        }
+        else{
+            System.out.println(" not special number");
+        }
+
+    }
+
+    public static int factorial(int n) {
+        int fact = 1, i = 1;
+        while (i <= n) {
+            fact *= i;
+        }
+        return fact;
+    }
+
+    public static int special(int n, int digit, int sum) {
+        int digit, sum = 0;
+        while (n != 0) {
+            digit = n % 10;
+            sum = sum + factorial(digit);
+            n = n / 10;
+        }
+        System.out.println(sum);
+        special(n, digit, sum + 1);
+        return sum;
+    }
+}
