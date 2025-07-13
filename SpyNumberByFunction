@@ -1,0 +1,33 @@
+import java.util.Scanner;
+public class Spyfunction{
+    public static Scanner sc=new Scanner(System.in);
+    public static void main(String[]args){
+        int n;
+        System.out.println("enter n:");
+        n=sc.nextInt();
+        int temp=spy(n);
+        
+
+    }
+    public static int spy(int n){
+       int sum=0,multiply=1,digit;
+        while(n!=0){
+            digit=n%10;
+            sum=sum+digit;
+            multiply=multiply*digit;
+            n=n/10;
+
+        }
+        System.out.println(sum);
+        System.out.println(multiply);
+        if(sum==multiply){
+            System.out.println("given number is spy");
+
+        
+        }
+        else{
+            System.out.println("given number is not spy");
+        }
+        return 0;
+    }
+}
