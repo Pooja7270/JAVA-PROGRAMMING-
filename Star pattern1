@@ -1,0 +1,26 @@
+
+import java.util.Scanner;
+
+public class Pattern1 {
+   public Pattern1() {
+   }
+
+   public static void main(String[] var0) {
+      Scanner var1 = new Scanner(System.in);
+      System.out.println("enter n: ");
+      int var2 = var1.nextInt();
+
+      for(int var3 = 1; var3 <= var2; ++var3) {
+         for(int var4 = 1; var4 <= var2; ++var4) {
+            if (var3 != 1 && var4 != var2 && var3 != var2 && var4 != 1) {
+               System.out.print("  ");
+            } else {
+               System.out.print(" * ");
+            }
+         }
+
+         System.out.println();
+      }
+
+   }
+}
