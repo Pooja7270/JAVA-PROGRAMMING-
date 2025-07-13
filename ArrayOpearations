@@ -1,0 +1,133 @@
+import java.util.Scanner;
+public class EvenSumA{
+  
+public static void main(String[] args)
+{
+Scanner sc= new Scanner(System.in);
+System.out.println("enter the size: ");
+int size=sc.nextInt();
+int[] arr= new int[size];
+int evensum=0, oddsum=0 ,sum=0;
+   for (int i = 0; i < size; i++)
+ {
+        arr[i]=sc.nextInt();
+        System.out.println("Enter the array elements:");
+
+ }
+ //array display
+   System.out.println("The array elements are:");
+        for (int i = 0; i < size; i++) 
+        {
+            System.out.println( arr[i]);
+        }
+        for(int i=0;i<size;i++){
+            if(arr[i]%2==0){
+                System.out.println("even number is : "+arr[i]);
+            }
+            else{
+                System.out.println("odd number is : "+arr[i]);
+            }
+        }
+    //evennumber sum in array
+ for(int i=0;i<size;i++)
+      {
+        if(arr[i]%2==0){
+       evensum=evensum + arr[i];
+       }
+    }
+      System.out.println("Sum of even elements in array : " +evensum);
+//odd number sum in array
+      for(int i=0;i<size;i++)
+      {
+        if(arr[i]%2!=0)
+        {
+       oddsum=oddsum + arr[i];
+       }
+    }
+      System.out.println("Sum of odd elements in array : " +oddsum);
+//all elements sum in array
+      for(int i=0;i<size;i++){
+
+        sum=sum+arr[i];
+      }
+      System.out.println("Sum of elements in array : " +sum);
+   //maximum number in array
+     int max = arr[0];
+
+        for (int i = 1; i < arr.length; i++) {
+            if (arr[i] > max) {
+                max = arr[i]; 
+            }
+        }
+
+        System.out.println("Maximum element in the array: " + max);
+
+        //minimum number in array
+        int min=arr[0];
+        for(int i=1;i<arr.length;i++){
+          if(arr[i]<min){
+            min=arr[i];
+          }
+        }
+         System.out.println("Minimum element in the array: " + min);
+
+         //second maximum number in array
+         int secmax=arr[0];
+           for (int i = 0; i < arr.length; i++) {
+            if (arr[i] < max) {
+              if(arr[i]>secmax){
+                secmax = arr[i]; 
+            }
+          }
+        }
+
+        System.out.println("Second Maximum element in the array: " + secmax);
+
+//search element in array
+ System.out.println("Enter the number to search: ");
+        int search = sc.nextInt();
+        int i;
+        for ( i = 0; i < arr.length; i++) {
+            if (arr[i] == search) {
+              System.out.println(i);
+                break;
+            }
+        }
+        if (i < arr.length) {
+            System.out.println(search + " is found in the array ");
+        } else {
+            System.out.println(search + " is not found in the array.");
+        }     
+// to find first and last occurence of number
+System.out.print("Enter the number to search: ");
+        int key = sc.nextInt();
+System.out.println("TO FIND THE OCURRENE OF A NUMBER");
+ int count = 0;
+        for (int num : arr) {
+            if (num == search) {
+                count++;
+            }
+        }
+
+        if (count > 0) {
+            System.out.println(search + " is found and occurs " + count + " time(s) in the array.");
+        } 
+
+ int first = -1, last = -1;
+        for ( i = 0; i < arr.length; i++) {
+            if (arr[i] == key) {
+                if (first == -1) {          
+                    first = i;
+                }
+                last = i;                  
+            }
+        }
+
+        if (first == -1) {
+            System.out.println(key + " not found in the array.");
+        } else {
+            System.out.println(key + " first occurs at index " + first);
+            System.out.println(key + " last  occurs at index " + last);
+        }
+}
+}
