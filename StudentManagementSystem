@@ -1,0 +1,64 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
+class StudentManagementSystem$CustomLinkedList {
+   private StudentManagementSystem$CustomLinkedList$Node head;
+
+   StudentManagementSystem$CustomLinkedList() {
+   }
+
+   public void add(StudentManagementSystem$Student var1) {
+      StudentManagementSystem$CustomLinkedList$Node var2 = new StudentManagementSystem$CustomLinkedList$Node(this, var1);
+      if (this.head == null) {
+         this.head = var2;
+      } else {
+         StudentManagementSystem$CustomLinkedList$Node var3;
+         for(var3 = this.head; var3.next != null; var3 = var3.next) {
+         }
+
+         var3.next = var2;
+      }
+
+   }
+
+   public StudentManagementSystem$Student search(int var1) {
+      for(StudentManagementSystem$CustomLinkedList$Node var2 = this.head; var2 != null; var2 = var2.next) {
+         if (var2.data.id == var1) {
+            return var2.data;
+         }
+      }
+
+      return null;
+   }
+
+   public boolean delete(int var1) {
+      if (this.head == null) {
+         return false;
+      } else if (this.head.data.id == var1) {
+         this.head = this.head.next;
+         return true;
+      } else {
+         StudentManagementSystem$CustomLinkedList$Node var2;
+         for(var2 = this.head; var2.next != null && var2.next.data.id != var1; var2 = var2.next) {
+         }
+
+         if (var2.next == null) {
+            return false;
+         } else {
+            var2.next = var2.next.next;
+            return true;
+         }
+      }
+   }
+
+   public List<StudentManagementSystem$Student> toList() {
+      ArrayList var1 = new ArrayList();
+
+      for(StudentManagementSystem$CustomLinkedList$Node var2 = this.head; var2 != null; var2 = var2.next) {
+         var1.add(var2.data);
+      }
+
+      return var1;
+   }
+}
