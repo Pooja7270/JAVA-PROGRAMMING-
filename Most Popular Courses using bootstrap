@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Most Popular Courses</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .course-card img {
+      height: 150px;
+      object-fit: contain;
+      margin-top: 10px;
+    }
+    .nav-tabs .nav-link.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .rating {
+      color: #ffc107;
+    }
+    .course-duration {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container my-5">
+  <h2 class="text-center mb-2 fw-bold">Most Popular Courses</h2>
+  <p class="text-center text-muted mb-4">Choose from hundreds of courses from specialist organizations</p>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs justify-content-center mb-4" id="courseTabs">
+    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#">Web Design</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Development</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Graphic Design</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Marketing</a></li>
+    <li class="nav-item"><a class="nav-link" href="#">Finance</a></li>
+  </ul>
+
+  <!-- Course Cards -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    
+    <!-- Card 1 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/FFC107/sketch.png" class="card-img-top mx-auto" alt="Sketch">
+        <div class="card-body">
+          <span class="badge bg-secondary mb-2">All level</span>
+          <h5 class="card-title">Sketch from A to Z: for app designer</h5>
+          <p class="text-muted small">Proposal indulged no do sociable he throwing settling.</p>
+          <div class="rating">★★★★☆ (4.0/5)</div>
+          <p class="course-duration mt-2">⏱ 12h 56m • 🎓 15 lectures</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/1E90FF/adobe-photoshop.png" class="card-img-top mx-auto" alt="Photoshop">
+        <div class="card-body">
+          <span class="badge bg-success mb-2">Beginner</span>
+          <h5 class="card-title">Graphic Design Masterclass</h5>
+          <p class="text-muted small">Rooms oh fully taken by worse do. Points afraid but may end.</p>
+          <div class="rating">★★★★½ (4.5/5)</div>
+          <p class="course-duration mt-2">⏱ 9h 56m • 🎓 65 lectures</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/fa314a/figma.png" class="card-img-top mx-auto" alt="Figma">
+        <div class="card-body">
+          <span class="badge bg-success mb-2">Beginner</span>
+          <h5 class="card-title">Create a Design System in Figma</h5>
+          <p class="text-muted small">Points afraid but may end. Rooms oh fully taken by worse do.</p>
+          <div class="rating">★★★★½ (4.5/5)</div>
+          <p class="course-duration mt-2">⏱ 5h 56m • 🎓 32 lectures</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/00C3FF/react-native.png" class="card-img-top mx-auto" alt="React Native">
+        <div class="card-body">
+          <span class="badge bg-success mb-2">Beginner</span>
+          <h5 class="card-title">Deep Learning with React-Native</h5>
+          <p class="text-muted small">Farther advanced setting say finished raillery.</p>
+          <div class="rating">★★★★☆ (4.0/5)</div>
+          <p class="course-duration mt-2">⏱ 16h 56m • 🎓 99 lectures</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/FF5722/html-5.png" class="card-img-top mx-auto" alt="HTML5">
+        <div class="card-body">
+          <span class="badge bg-secondary mb-2">All level</span>
+          <h5 class="card-title">Build Responsive Websites with HTML</h5>
+          <p class="text-muted small">Far advanced setting say finished raillery.</p>
+          <div class="rating">★★★★☆ (4.0/5)</div>
+          <p class="course-duration mt-2">⏱ 15h 30m • 🎓 68 lectures</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="col">
+      <div class="card course-card h-100 text-center p-3">
+        <img src="https://img.icons8.com/ios-filled/100/1E90FF/css3.png" class="card-img-top mx-auto" alt="CSS3">
+        <div class="card-body">
+          <span class="badge bg-success mb-2">Beginner</span>
+          <h5 class="card-title">Build Websites with CSS</h5>
+          <p class="text-muted small">Far advanced setting say finished raillery.</p>
+          <div class="rating">★★★★½ (4.5/5)</div>
+          <p class="course-duration mt-2">⏱ 36h 30m • 🎓 72 lectures</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
