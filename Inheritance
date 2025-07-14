@@ -1,0 +1,37 @@
+public class Inheritance {
+    public static void main(String[] args) {
+
+        ProductValidity p = new ProductValidity();
+
+        p.name = "WINDOWS";
+        p.id = 213.22;
+        p.validity = 11;
+        p.productDisplay();
+        SoftwareProduct s = new ProductValidity();
+        s.name = "LINUX";
+        s.id = 5.99;
+        s.productDisplay();
+
+    }
+}
+
+class SoftwareProduct {
+    String name;
+    double id;
+
+    void productDisplay() {
+        System.out.println("the product name is: " + name);
+        System.out.println("the product id is: " + id);
+
+    }
+}
+
+class ProductValidity extends SoftwareProduct {
+    double validity;
+
+    void productDisplay() {
+        System.out.println("the product name is: " + name);
+        System.out.println("the product id is: " + id);
+        System.out.println("the product validity is: " + validity);
+    }
+}
