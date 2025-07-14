@@ -1,0 +1,202 @@
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Represents a Train with a train number, name, total seats, and available seats.
+class Railway {
+
+    int railwayNumber;
+    String railwayName;
+    int totalSeats;
+    int availableSeats;
+
+    public Railway(int railwayNumber, String railwayName, int totalSeats) {
+        this.railwayNumber = railwayNumber;
+        this.railwayName = railwayName;
+        this.totalSeats = totalSeats;
+        this.availableSeats = totalSeats;
+    }
+
+    // Books the specified number of seats if available.
+    public boolean bookSeats(int seats) {
+        if (seats <= availableSeats) {
+            availableSeats -= seats;
+            return true;
+        }
+        return false;
+    }
+
+    // Cancels (adds back) the specified number of seats.
+    public void cancelSeats(int seats) {
+        availableSeats += seats;
+        if (availableSeats > totalSeats) {
+            availableSeats = totalSeats;
+        }
+    }
+
+    public void display() {
+        System.out.println("Railway: " + railwayName + " (" + railwayNumber + ") - Available Seats: " + availableSeats);
+    }
+}
+
+// Represents a Reservation. A unique PNR is generated for each booking.
+class Reservation {
+
+    static int pnrCounter = 1000;  // Static counter to generate unique PNR values
+    int pnr;
+    Railway railway;
+    String passengerName;
+    int seatsBooked;
+
+    public Reservation(Railway railway, String passengerName, int seatsBooked) {
+        this.railway = railway;
+        this.passengerName = passengerName;
+        this.seatsBooked = seatsBooked;
+        this.pnr = pnrCounter++;
+    }
+
+    public void display() {
+        System.out.println("PNR: " + pnr + " | Passenger: " + passengerName
+                + " | Railway: " + railway.railwayName + " (" + railway.railwayNumber + ")"
+                + " | Seats Booked: " + seatsBooked);
+    }
+}
+
+// Main system containing the menu and methods to handle reservations.
+public class RailwayReservationSystem {
+
+    // List of trains and reservations maintained in memory
+    static ArrayList<Railway> railway = new ArrayList<>();
+    static ArrayList<Reservation> reservations = new ArrayList<>();
+
+    public static void main(String[] args) {
+        // Initialize the system with a few sample trains.
+        railway.add(new Railway(101, "Express", 100));
+        railway.add(new Railway(102, "Superfast", 150));
+        railway.add(new Railway(103, "Rajdhani", 120));
+
+        Scanner sc = new Scanner(System.in);
+        boolean running = true;
+
+        System.out.println("Welcome to the Railway Reservation System!");
+
+        while (running) {
+            System.out.println("\n--- Main Menu ---");
+            System.out.println("1. Book Ticket");
+            System.out.println("2. Cancel Ticket");
+            System.out.println("3. Display Reservations");
+            System.out.println("4. Display Available Trains");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+            sc.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    bookTicket(sc);
+                    break;
+                case 2:
+                    cancelTicket(sc);
+                    break;
+                case 3:
+                    displayReservations();
+                    break;
+                case 4:
+                    displayRailway();
+                    break;
+                case 5:
+                    running = false;
+                    System.out.println("Exiting the system. Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+        sc.close();
+    }
+
+    // Displays the list of trains.
+    static void displayRailway() {
+        System.out.println("\nAvailable Railways:");
+        for (Railway t : railway) {
+            t.display();
+        }
+    }
+
+    // Processes booking a ticket.
+    static void bookTicket(Scanner sc) {
+        displayRailway();
+
+        System.out.print("\nEnter train number: ");
+        int railwayNumber = sc.nextInt();
+        sc.nextLine(); // Consume newline
+
+        Railway selectedRailway = null;
+        for (Railway t : railway) {
+            if (t.railwayNumber == railwayNumber) {
+                selectedRailway = t;
+                break;
+            }
+        }
+
+        if (selectedRailway == null) {
+            System.out.println("Railway not found! Please try again with a valid train number.");
+            return;
+        }
+
+        System.out.print("Enter passenger name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter number of seats to book: ");
+        int seats = sc.nextInt();
+        sc.nextLine(); // Consume newline
+
+        if (seats > selectedRailway.availableSeats) {
+            System.out.println("Not enough seats available! Only " + selectedRailway.availableSeats + " seats available.");
+        } else {
+            // Book the seats and create a reservation.
+            boolean booked = selectedRailway.bookSeats(seats);
+            if (booked) {
+                Reservation res = new Reservation(selectedRailway, name, seats);
+                reservations.add(res);
+                System.out.println("Ticket booked successfully. Your PNR is " + res.pnr);
+            }
+        }
+    }
+
+    // Processes ticket cancellation.
+    static void cancelTicket(Scanner sc) {
+        System.out.print("\nEnter your PNR: ");
+        int pnr = sc.nextInt();
+        sc.nextLine();  // Consume newline
+
+        Reservation found = null;
+        for (Reservation r : reservations) {
+            if (r.pnr == pnr) {
+                found = r;
+                break;
+            }
+        }
+
+        if (found == null) {
+            System.out.println("Reservation not found for the entered PNR.");
+        } else {
+            // Cancel the booking by restoring seats and removing the reservation.
+            found.railway.cancelSeats(found.seatsBooked);
+            reservations.remove(found);
+            System.out.println("Ticket cancelled successfully for PNR " + pnr);
+        }
+    }
+
+    // Displays all current reservations.
+    static void displayReservations() {
+        if (reservations.isEmpty()) {
+            System.out.println("\nNo reservations available.");
+        } else {
+            System.out.println("\nCurrent Reservations:");
+            for (Reservation r : reservations) {
+                r.display();
+            }
+        }
+    }
+}
