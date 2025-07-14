@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>9th march html code</title>
+        <style>
+            table, th, td {
+              border: 1px solid rebeccapurple;
+              border-collapse: collapse;
+            }
+            </style>
+    </head>
+    <body>
+        <h1>9th march html code</h1>
+        <hr>
+        <table>
+            <thead>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Salary</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John</td>
+                    <td>24</td>
+                    <td>20000</td>
+            </tr>
+                <tr>
+                 <td>Adam</td>
+                    <td>31</td>
+                    <td>35000</td>
+                 </tr>
+                <tr>
+                    <td>Chris</td>
+                    <td colspan="2">27</td><!--colspan is used to merge columns-->
+                    
+                </tr>
+                
+               </tbody>
+        </table>
+
+        <hr>
+        <br>
+        <table>
+            <thead>
+               <tr>
+                <th>S.N</th>
+                <th>Item</th>
+                <th>Quantity</th>
+               </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>1</td>
+                <td>Apple</td>
+                <td>2</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Mango</td>
+                    <td>2</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">3</td><!--rowspan is used to merge the rows-->
+                        <td>Orange</td>
+                        <td>1</td>
+                        </tr>
+                        <tr>
+                            
+                            <td colspan="1">Dragonfruit</td>
+                            <td>1</td>
+                            
+                            </tr>
+
+                        <tr>
+                            <td colspan="2">Total</td>
+                            <td>5</td>
+                        </tr>
+           </tbody>
+     
+        </table>
+        <hr>
+        <br>
+        <table>
+            <caption>Product performance by region</caption>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <td colspan="4"> Performance Metrics</td>
+                </tr>
+                <tr>
+                    
+                    <th>Region</th>
+                    <th>Q1</th>
+                    <th>Q2</th>
+                    <th>Q3</th>
+                    <th>Q4</th>
+                </tr>
+            
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">Product X</td>
+                
+                    <td>$30000</td>
+                    <td>$28000</td>
+                    <td>$35000</td>
+                    <td>$32000</td>
+                </tr>
+                <tr>
+                    
+                    <td>95%</td>
+                    <td>92%</td>
+                    <td>98%</td>
+                    <td>94%</td>
+                </tr>
+            </tbody>
+            
+        </table>
+        <br>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>College Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Pooja Chavan</td>
+                    <td>Baramati</td>
+                    <td>College of engineering malegaon</td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <hr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>College Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">Pooja</td>
+                    <td>Baramati</td>
+                    <td rowspan="3">College of engineering malegaon</td>
+                </tr>
+                <tr>
+                    <td>Maharashtra</td>
+                </tr>
+                <tr>
+                    <td colspan="2">Veera</td>
+                </tr>
+            </tbody>
+        </table>
+        <br><hr>
+        <div>
+            <h1>Capital of India is?</h1>
+            <label for="capitaltype1">Mumbai</label>
+            <input type="radio" name="capitalName" value="Mumbai" id="capitalType1">
+        </div>
+        <div>
+            <label for="capitaltype2">Delhi</label>
+            <input type="radio" name="capitalName" value="Delhi" id="capitalType2">
+        </div>
+        <div>
+            <label for="capitaltype3">Goa</label>
+            <input type="radio" name="capitalName" value="Goa" id="capitalType3">
+        </div>
+        <div>
+            <label for="capitaltype4">Rajasthan</label>
+            <input type="radio" name="capitalName" value="Rajasthan" id="capitalType4">
+        </div>
+        <div>
+            <label for="capitaltype5">Kashmir</label>
+            <input type="radio" name="capitalName" value="Kashmir" id="capitaltype5">
+        </div>
+        <hr>
+    </body>
+</html>
