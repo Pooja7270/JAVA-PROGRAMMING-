@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Railway Reservation System</title>
+  <h5>MADE BY POOJA SACHIN CHAVAN</h5>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+      background-color: #f2f2f2;
+    }
+    .hidden {
+      display: none;
+    }
+    .container-section {
+      margin-top: 20px;
+    }
+    .card {
+      margin-bottom: 15px;
+    }
+    .modal-body input {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center">Railway Reservation System</h2>
+
+    <!-- Login/Register -->
+    <div id="loginSection" class="container-section">
+      <h4>Login</h4>
+      <form id="loginForm">
+        <input type="email" class="form-control my-2" id="loginEmail" placeholder="Email" required>
+        <input type="password" class="form-control my-2" id="loginPassword" placeholder="Password" required>
+        <select id="loginRole" class="form-control my-2">
+          <option value="passenger">Passenger</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button class="btn btn-primary w-100" type="submit">Login</button>
+      </form>
+      <hr>
+      <h4>Register (Passengers only)</h4>
+      <form id="registerForm">
+        <input type="email" class="form-control my-2" id="registerEmail" placeholder="Email" required>
+        <input type="password" class="form-control my-2" id="registerPassword" placeholder="Password" required>
+        <button class="btn btn-success w-100" type="submit">Register</button>
+      </form>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="container-section hidden">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5>Welcome, <span id="currentUserEmail"></span></h5>
+        <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+      </div>
+
+      <div id="passengerActions" class="hidden">
+        <h5>Search Trains</h5>
+        <form id="searchForm" class="mb-3">
+          <div class="col-md-4">
+            <select class="form-control" id="fromStation" required>
+              <option value="">From</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <select class="form-control" id="toStation" required>
+              <option value="">To</option>
+            </select>
+          </div>
+          <button class="btn btn-primary mt-3" type="submit">Search</button>
+        </form>
+
+        <div id="trainResults"></div>
+
+        <hr>
+        <h5>My Bookings</h5>
+        <div id="myBookings"></div>
+      </div>
+
+      <div id="adminActions" class="hidden">
+        <h5>All Bookings</h5>
+        <div id="allBookings"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Modal -->
+  <div class="modal fade" id="bookingModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="paymentForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm Booking</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Train:</strong> <span id="modalTrainName"></span></p>
+            <p><strong>From:</strong> <span id="modalFrom"></span></p>
+            <p><strong>To:</strong> <span id="modalTo"></span></p>
+            <p><strong>Price:</strong> ₹<span id="modalPrice"></span></p>
+            <div class="mb-2">
+              <label for="numSeats">Number of Seats:</label>
+              <input type="number" class="form-control" id="numSeats" min="1" value="1" required>
+            </div>
+            <p><strong>Total Price: ₹<span id="totalPrice"></span></strong></p>
+            <input type="text" class="form-control my-2" placeholder="Card Number" required>
+            <input type="text" class="form-control my-2" placeholder="Card Holder Name" required>
+            <input type="date" class="form-control my-2" required>
+            <input type="number" class="form-control my-2" placeholder="CVV" required>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success" type="submit">Pay & Book</button>
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="printTicketModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Your Ticket</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="ticketDetails">
+          <!-- Ticket details will be inserted here -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" onclick="printTicket()">Print Ticket</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <!-- Bootstrap + JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const trains = [
+  { id: 1, name: "Express 101", from: "Delhi", to: "Mumbai", price: 450, seatsAvailable: 1000, departure: "06:00 AM", arrival: "02:00 PM" },
+  { id: 2, name: "Shatabdi 202", from: "Mumbai", to: "Pune", price: 300, seatsAvailable: 800, departure: "07:00 AM", arrival: "10:00 AM" },
+  { id: 3, name: "Rajdhani 303", from: "Kolkata", to: "Delhi", price: 550, seatsAvailable: 950, departure: "08:00 AM", arrival: "06:00 PM" },
+  { id: 4, name: "Duronto 404", from: "Chennai", to: "Bangalore", price: 400, seatsAvailable: 850, departure: "09:00 AM", arrival: "01:00 PM" },
+  { id: 5, name: "Superfast 505", from: "Hyderabad", to: "Vijayawada", price: 350, seatsAvailable: 700, departure: "10:00 AM", arrival: "02:00 PM" },
+  { id: 6, name: "Jan Shatabdi 606", from: "Delhi", to: "Agra", price: 250, seatsAvailable: 600, departure: "05:00 AM", arrival: "07:00 AM" },
+  { id: 7, name: "Intercity 707", from: "Lucknow", to: "Kanpur", price: 200, seatsAvailable: 500, departure: "06:30 AM", arrival: "08:00 AM" },
+  { id: 8, name: "Garib Rath 808", from: "Jaipur", to: "Delhi", price: 300, seatsAvailable: 750, departure: "07:30 AM", arrival: "11:30 AM" },
+  { id: 9, name: "Mail Express 909", from: "Bhopal", to: "Indore", price: 280, seatsAvailable: 650, departure: "08:30 AM", arrival: "12:00 PM" },
+  { id: 10, name: "Passenger 010", from: "Patna", to: "Gaya", price: 150, seatsAvailable: 400, departure: "06:00 AM", arrival: "08:00 AM" },
+  { id: 11, name: "Express 111", from: "Ranchi", to: "Jamshedpur", price: 320, seatsAvailable: 620, departure: "09:00 AM", arrival: "12:00 PM" },
+  { id: 12, name: "Shatabdi 212", from: "Delhi", to: "Lucknow", price: 500, seatsAvailable: 750, departure: "05:30 AM", arrival: "11:30 AM" },
+  { id: 13, name: "Rajdhani 313", from: "Mumbai", to: "Delhi", price: 600, seatsAvailable: 900, departure: "06:45 AM", arrival: "04:30 PM" },
+  { id: 14, name: "Duronto 414", from: "Chennai", to: "Coimbatore", price: 420, seatsAvailable: 850, departure: "07:15 AM", arrival: "12:45 PM" },
+  { id: 15, name: "Superfast 515", from: "Pune", to: "Nashik", price: 370, seatsAvailable: 780, departure: "06:00 AM", arrival: "09:00 AM" },
+  { id: 16, name: "Jan Shatabdi 616", from: "Kolkata", to: "Asansol", price: 260, seatsAvailable: 600, departure: "05:00 AM", arrival: "07:00 AM" },
+  { id: 17, name: "Intercity 717", from: "Nagpur", to: "Raipur", price: 310, seatsAvailable: 580, departure: "07:00 AM", arrival: "10:30 AM" },
+  { id: 18, name: "Garib Rath 818", from: "Surat", to: "Ahmedabad", price: 280, seatsAvailable: 720, departure: "06:30 AM", arrival: "09:30 AM" },
+  { id: 19, name: "Mail Express 919", from: "Thiruvananthapuram", to: "Ernakulam", price: 340, seatsAvailable: 680, departure: "08:00 AM", arrival: "11:00 AM" },
+  { id: 20, name: "Passenger 020", from: "Madurai", to: "Tiruchirappalli", price: 160, seatsAvailable: 450, departure: "06:00 AM", arrival: "08:00 AM" },
+  { id: 21, name: "Express 121", from: "Varanasi", to: "Allahabad", price: 300, seatsAvailable: 600, departure: "07:00 AM", arrival: "09:00 AM" },
+  { id: 22, name: "Shatabdi 222", from: "Delhi", to: "Chandigarh", price: 320, seatsAvailable: 700, departure: "06:30 AM", arrival: "10:00 AM" },
+  { id: 23, name: "Rajdhani 323", from: "Ahmedabad", to: "Delhi", price: 580, seatsAvailable: 800, departure: "08:00 AM", arrival: "04:00 PM" },
+  { id: 24, name: "Duronto 424", from: "Bangalore", to: "Hyderabad", price: 450, seatsAvailable: 900, departure: "05:30 AM", arrival: "12:00 PM" },
+  { id: 25, name: "Superfast 525", from: "Guwahati", to: "Dibrugarh", price: 400, seatsAvailable: 700, departure: "06:00 AM", arrival: "01:00 PM" },
+  { id: 26, name: "Jan Shatabdi 626", from: "Mumbai", to: "Goa", price: 350, seatsAvailable: 750, departure: "07:00 AM", arrival: "01:30 PM" },
+  { id: 27, name: "Intercity 727", from: "Cuttack", to: "Bhubaneswar", price: 180, seatsAvailable: 400, departure: "06:30 AM", arrival: "07:30 AM" },
+  { id: 28, name: "Garib Rath 828", from: "Shimla", to: "Kalka", price: 200, seatsAvailable: 350, departure: "07:00 AM", arrival: "10:00 AM" },
+  { id: 29, name: "Mail Express 929", from: "Ajmer", to: "Udaipur", price: 280, seatsAvailable: 500, departure: "08:00 AM", arrival: "12:00 PM" },
+  { id: 30, name: "Passenger 030", from: "Panaji", to: "Margao", price: 120, seatsAvailable: 300, departure: "06:30 AM", arrival: "07:45 AM" },
+  { id: 31, name: "Express 131", from: "Delhi", to: "Panipat", price: 240, seatsAvailable: 650, departure: "06:00 AM", arrival: "08:30 AM" },
+  { id: 32, name: "Shatabdi 232", from: "Hyderabad", to: "Nanded", price: 340, seatsAvailable: 600, departure: "07:30 AM", arrival: "11:30 AM" },
+  { id: 33, name: "Rajdhani 333", from: "Kolkata", to: "Ranchi", price: 420, seatsAvailable: 700, departure: "08:00 AM", arrival: "01:00 PM" },
+  { id: 34, name: "Duronto 434", from: "Patna", to: "Delhi", price: 520, seatsAvailable: 880, departure: "06:45 AM", arrival: "04:45 PM" },
+  { id: 35, name: "Superfast 535", from: "Indore", to: "Bhopal", price: 270, seatsAvailable: 570, departure: "06:30 AM", arrival: "09:30 AM" },
+  { id: 36, name: "Jan Shatabdi 636", from: "Coimbatore", to: "Salem", price: 260, seatsAvailable: 500, departure: "07:00 AM", arrival: "09:30 AM" },
+  { id: 37, name: "Intercity 737", from: "Kanpur", to: "Delhi", price: 350, seatsAvailable: 800, departure: "06:30 AM", arrival: "11:00 AM" },
+  { id: 38, name: "Garib Rath 838", from: "Gaya", to: "Varanasi", price: 250, seatsAvailable: 460, departure: "06:00 AM", arrival: "09:00 AM" },
+  { id: 39, name: "Mail Express 939", from: "Nagpur", to: "Bhopal", price: 320, seatsAvailable: 690, departure: "07:00 AM", arrival: "11:30 AM" },
+  { id: 40, name: "Passenger 040", from: "Jabalpur", to: "Itarsi", price: 190, seatsAvailable: 370, departure: "05:30 AM", arrival: "08:30 AM" },
+  { id: 41, name: "Express 141", from: "Raipur", to: "Bilaspur", price: 280, seatsAvailable: 580, departure: "06:00 AM", arrival: "08:45 AM" },
+  { id: 42, name: "Shatabdi 242", from: "Bhubaneswar", to: "Kolkata", price: 420, seatsAvailable: 720, departure: "07:00 AM", arrival: "12:00 PM" },
+  { id: 43, name: "Rajdhani 343", from: "Delhi", to: "Bangalore", price: 700, seatsAvailable: 950, departure: "06:30 AM", arrival: "06:00 PM" },
+  { id: 44, name: "Duronto 444", from: "Chennai", to: "Delhi", price: 650, seatsAvailable: 900, departure: "05:00 AM", arrival: "06:00 PM" },
+  { id: 45, name: "Superfast 545", from: "Amritsar", to: "Jalandhar", price: 230, seatsAvailable: 450, departure: "07:30 AM", arrival: "09:00 AM" },
+  { id: 46, name: "Jan Shatabdi 646", from: "Varanasi", to: "Delhi", price: 460, seatsAvailable: 800, departure: "08:00 AM", arrival: "04:00 PM" },
+  { id: 47, name: "Intercity 747", from: "Agra", to: "Mathura", price: 150, seatsAvailable: 390, departure: "06:00 AM", arrival: "07:15 AM" },
+  { id: 48, name: "Garib Rath 848", from: "Goa", to: "Mumbai", price: 420, seatsAvailable: 780, departure: "06:00 AM", arrival: "02:00 PM" },
+  { id: 49, name: "Mail Express 949", from: "Mumbai", to: "Surat", price: 350, seatsAvailable: 650, departure: "07:00 AM", arrival: "11:00 AM" },
+  { id: 50, name: "Passenger 050", from: "Kota", to: "Jaipur", price: 200, seatsAvailable: 410, departure: "06:30 AM", arrival: "10:00 AM" }
+];
+
+
+
+    let selectedTrain = null;
+    const users = [];
+
+    function saveToLocal(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    function getFromLocal(key) {
+      return JSON.parse(localStorage.getItem(key)) || [];
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      location.reload();
+    }
+
+    // Login/Register
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+      const users = getFromLocal("users");
+
+      if (users.find(u => u.email === email)) {
+        alert("User already exists.");
+        return;
+      }
+
+      users.push({ email, password, role: "passenger" });
+      saveToLocal("users", users);
+      alert("Registration successful. Please login.");
+
+    });
+
+    // Login Logic
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      const role = document.getElementById("loginRole").value;
+
+      const user = getFromLocal("users").find(user => user.email === email && user.password === password);
+
+      if (user) {
+        localStorage.setItem("loggedInUser", JSON.stringify({ email, role }));
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+        document.getElementById("currentUserEmail").textContent = email;
+
+        if (role === "passenger") {
+  document.getElementById("passengerActions").classList.remove("hidden");
+  loadStations();
+  loadMyBookings(); // ✅ load passenger's bookings
+} 
+else if (user || (role === "admin" && email === "poojachavan008@outlook.com" && password === "pooja123")) {
+        localStorage.setItem("loggedInUser", JSON.stringify({ email, role }));
+        showUserSection(role);
+        alert("Logged in successfully!");
+      } 
+
+
+      } else {
+        alert("Invalid login credentials.");
+      }
+    });
+
+    // Load stations dynamically
+    function loadStations() {
+      const stations = [...new Set(trains.map(train => train.from))];
+      const fromStationSelect = document.getElementById("fromStation");
+      const toStationSelect = document.getElementById("toStation");
+
+      stations.forEach(station => {
+        const option = document.createElement("option");
+        option.value = station;
+        option.textContent = station;
+        fromStationSelect.appendChild(option);
+
+        const option2 = document.createElement("option");
+        option2.value = station;
+        option2.textContent = station;
+        toStationSelect.appendChild(option2);
+      });
+    }
+
+    // Train Search
+    document.getElementById("searchForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const from = document.getElementById("fromStation").value;
+      const to = document.getElementById("toStation").value;
+      const availableTrains = trains.filter(train => train.from === from && train.to === to);
+      const resultsDiv = document.getElementById("trainResults");
+      resultsDiv.innerHTML = "";
+
+      availableTrains.forEach(train => {
+        const trainCard = document.createElement("div");
+        trainCard.classList.add("card");
+        trainCard.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${train.name}</h5>
+            <p class="card-text">From: ${train.from} To: ${train.to}</p>
+            <p><strong>Departure:</strong> ${train.departure} | <strong>Arrival:</strong> ${train.arrival}</p>
+            <p><strong>Price:</strong> ₹${train.price} | <strong>Seats Available:</strong> ${train.seatsAvailable}</p>
+            <button class="btn btn-primary" onclick="openBookingModal(${train.id})">Book Now</button>
+          </div>
+        `;
+        resultsDiv.appendChild(trainCard);
+      });
+    });
+
+    // Open Booking Modal
+    function openBookingModal(trainId) {
+      selectedTrain = trains.find(train => train.id === trainId);
+      document.getElementById("modalTrainName").textContent = selectedTrain.name;
+      document.getElementById("modalFrom").textContent = selectedTrain.from;
+      document.getElementById("modalTo").textContent = selectedTrain.to;
+      document.getElementById("modalPrice").textContent = selectedTrain.price;
+      document.getElementById("totalPrice").textContent = selectedTrain.price;
+
+      const numSeatsInput = document.getElementById("numSeats");
+      numSeatsInput.addEventListener("input", function() {
+        const numSeats = parseInt(numSeatsInput.value);
+        const pricePerSeat = selectedTrain.price;
+        const totalPrice = numSeats * pricePerSeat;
+        document.getElementById("totalPrice").textContent = totalPrice;
+      });
+
+      const bookingModal = new bootstrap.Modal(document.getElementById("bookingModal"));
+      bookingModal.show();
+    }
+
+    // Handle Payment and Booking
+    document.getElementById("paymentForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const numSeats = parseInt(document.getElementById("numSeats").value);
+      if (numSeats > selectedTrain.seatsAvailable) {
+        alert("Not enough seats available.");
+        return;
+      }
+      selectedTrain.seatsAvailable -= numSeats;
+      saveToLocal("trains", trains);
+
+      const bookings = getFromLocal("bookings");
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      bookings.push({
+        name: loggedInUser.email,
+        from: selectedTrain.from,
+        to: selectedTrain.to,
+        numSeats,
+        price: selectedTrain.price * numSeats,
+      });
+      saveToLocal("bookings", bookings);
+
+      alert("Booking successful!");
+      const printTicketModal = new bootstrap.Modal(document.getElementById("printTicketModal"));
+      printTicketModal.show();
+      loadMyBookings();     // refresh passenger bookings
+      loadAllBookings();    // refresh admin bookings if logged in as admin
+
+    });
+
+    // Print Ticket
+    function printTicket() {
+    const ticketDetails = document.getElementById("ticketDetails");
+    
+    // Getting necessary ticket information
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const numSeats = parseInt(document.getElementById("numSeats").value);
+    
+    const ticketHTML = `
+      <div style="text-align: center; font-family: Arial, sans-serif; padding: 20px; border: 2px solid #ccc; border-radius: 10px; width: 300px; margin: 0 auto;">
+        <h3 style="margin-bottom: 20px;">Ticket</h3>
+        <p><strong>Name:</strong> ${loggedInUser.email}</p>
+        <p><strong>Train:</strong> ${selectedTrain.name}</p>
+        <p><strong>From:</strong> ${selectedTrain.from} <strong>To:</strong> ${selectedTrain.to}</p>
+        <p><strong>Seats:</strong> ${numSeats}</p>
+        <p><strong>Price:</strong> ₹${selectedTrain.price * numSeats}</p>
+        <p><strong>Departure:</strong> ${selectedTrain.departure}</p>
+        <p><strong>Arrival:</strong> ${selectedTrain.arrival}</p>
+        <div style="margin-top: 20px; font-weight: bold; color: green;">
+          <p>Thank you for booking with us!</p>
+        </div>
+      </div>
+    `;
+
+    ticketDetails.innerHTML = ticketHTML;
+    const printArea = document.getElementById("printTicketModal");
+    printArea.classList.remove("hidden");
+    window.print();
+    }
+  // Load passenger's own bookings
+  function loadMyBookings() {
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    const bookings = getFromLocal("bookings").filter(b => b.name === loggedInUser.email);
+    const container = document.getElementById("myBookings");
+    container.innerHTML = "";
+
+    if (bookings.length === 0) {
+      container.innerHTML = "<p>No bookings found.</p>";
+      return;
+    }
+
+    bookings.forEach((b, i) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">Ticket #${i + 1}</h5>
+          <p>From: ${b.from} | To: ${b.to}</p>
+          <p>Seats: ${b.numSeats} | Total Price: ₹${b.price}</p>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  
+  function loadAllBookings() {
+    const bookings = getFromLocal("bookings");
+    const container = document.getElementById("allBookings");
+    container.innerHTML = "";
+
+    if (bookings.length === 0) {
+      container.innerHTML = "<p>No bookings available.</p>";
+      return;
+    }
+
+    bookings.forEach((b, i) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <div class="card-body">
+          <h5 class="card-title">Booking #${i + 1}</h5>
+          <p>User: ${b.name}</p>
+          <p>From: ${b.from} | To: ${b.to}</p>
+          <p>Seats: ${b.numSeats} | Total Price: ₹${b.price}</p>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+  window.onload = () => {
+        showApp();
+        displayBookings();
+        if (JSON.parse(localStorage.getItem("user"))?.role === 'admin') {
+          displayAllBookings();
+        }
+      }
+
+  </script>
+</body>
+</html>
